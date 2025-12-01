@@ -1,23 +1,23 @@
-//
-//  StudentsToDoApp.swift
-//  StudentsToDo
-//
-//  Created by SDGKU on 10/11/25.
-//
-
 import SwiftUI
 
 @main
 struct StudentsToDoApp: App {
     @AppStorage("isDarkMode") private var isDarkMode = false
-    @Environment(\.locale) var locale
+    @Environment(\.locale) private var locale
     @StateObject private var storeManager = StoreManager()
     
+    /// Accent color that adapts to the active language.
+    /// - Arabic: brown
+    /// - Spanish: orange
+    /// - All others: teal
     private var dynamicAccentColor: Color {
-        if locale.language.languageCode?.identifier == "ar" {
+        switch locale.language.languageCode?.identifier {
+        case "ar":
             return .brown
-        } else {
-            return .cyan
+        case "es":
+            return .orange
+        default:
+            return .teal
         }
     }
     

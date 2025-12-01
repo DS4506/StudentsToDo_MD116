@@ -1,103 +1,105 @@
-//
-//  HomeView.swift
-//  StudentsToDo
-//
-//  Created by SDGKU on 11/11/25.
-//
-
 import SwiftUI
 
 struct HomeView: View {
-    // ADD THIS ONE LINE:
-        @Environment(\.appAccentColor) var appAccentColor
+    @Environment(\.appAccentColor) private var appAccentColor
     
-    private let profiles = [
-        ProfileCategory(name: "School", imageName: "SchoolCover", storageKey: "school_data"),
-        ProfileCategory(name: "Work", imageName: "WorkCover", storageKey: "work_data"),
+    private let profiles: [ProfileCategory] = [
+        ProfileCategory(name: "School",   imageName: "SchoolCover",   storageKey: "school_data"),
+        ProfileCategory(name: "Work",     imageName: "WorkCover",     storageKey: "work_data"),
         ProfileCategory(name: "Personal", imageName: "PersonalCover", storageKey: "personal_data")
     ]
     
-    let columns = [
-        GridItem(.flexible()),
-        GridItem(.flexible()),
-        GridItem(.flexible())
+    private let columns = [
+        GridItem(.flexible(), spacing: 16),
+        GridItem(.flexible(), spacing: 16)
     ]
     
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 40) {
-                    welcomeHeader
+                VStack(spacing: 32) {
+                    header
                     profileGrid
                 }
+                .padding()
             }
             .navigationTitle("Home")
-            .navigationBarHidden(true)
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
     
-    private var welcomeHeader: some View {
-        VStack(spacing: 10) {
-            Image(systemName: "person.crop.circle.badge.checkmark")
-                .font(.system(size: 80))
+    private var header: some View {
+        VStack(spacing: 8) {
+            Image(systemName: "checklist")
+                .font(.system(size: 60))
                 .foregroundStyle(appAccentColor)
             
-            Text("Welcome Back")
+            Text("Students To-Do")
                 .font(.largeTitle.bold())
             
-            Text("Select a workspace to begin")
-                .font(.title3)
+            Text("Pick a workspace to manage its tasks.")
+                .font(.subheadline)
                 .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
         }
-        .padding(.top, 50)
+        .frame(maxWidth: .infinity)
+        .padding(.top, 16)
     }
     
     private var profileGrid: some View {
         LazyVGrid(columns: columns, spacing: 20) {
             ForEach(profiles) { profile in
-                NavigationLink(destination: ContentView(storageKey: profile.storageKey, profileTitle: profile.name)) {
+                NavigationLink {
+                    ContentView(
+                        storageKey: profile.storageKey,
+                        profileTitle: profile.name
+                    )
+                } label: {
                     ProfileCard(profile: profile)
                 }
                 .buttonStyle(.plain)
                 .accessibilityIdentifier(profile.storageKey)
             }
         }
-        .padding(.horizontal, 80)
+        .padding(.top, 8)
     }
 }
 
 struct ProfileCard: View {
     let profile: ProfileCategory
-    @Environment(\.appAccentColor) var appAccentColor
+    @Environment(\.appAccentColor) private var appAccentColor
+    
     var body: some View {
-        VStack {
+        VStack(alignment: .leading, spacing: 8) {
             Image(profile.imageName)
                 .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(height: 140)
+                .scaledToFill()
+                .frame(height: 120)
+                .frame(maxWidth: .infinity)
                 .clipped()
-                .overlay(Color.black.opacity(0.2))
+                .overlay(alignment: .topLeading) {
+                    Text(profile.name)
+                        .font(.headline.bold())
+                        .padding(8)
+                        .background(.ultraThinMaterial)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .padding(8)
+                }
             
             HStack {
-                Text(profile.name)
-                    .font(.title3.bold())
-                    .foregroundStyle(.primary)
+                Image(systemName: "square.and.pencil")
+                    .foregroundStyle(appAccentColor)
+                Text("Open tasks")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
                 
                 Spacer()
-                
-                Image(systemName: "chevron.right.circle.fill")
-                    .font(.title2)
-                    .foregroundStyle(appAccentColor)
-                    .flipsForRightToLeftLayoutDirection(true)
             }
-            .padding()
-            .background(Color(.secondarySystemGroupedBackground))
+            .padding(.horizontal, 8)
+            .padding(.bottom, 8)
         }
-        .clipShape(RoundedRectangle(cornerRadius: 15))
-        .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
-        .overlay(
-            RoundedRectangle(cornerRadius: 15)
-                .stroke(Color.white.opacity(0.5), lineWidth: 1)
-        )
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 2)
     }
 }

@@ -1,14 +1,8 @@
-//
-//  AppEnvironment.swift
-//  StudentsToDo
-//
-//  Created by SDGKU on 15/11/25.
-//
-
 import SwiftUI
 
 private struct AppAccentColorKey: EnvironmentKey {
-    static let defaultValue: Color = .cyan
+    // Default accent color used if nothing else is injected.
+    static let defaultValue: Color = .teal
 }
 
 extension EnvironmentValues {

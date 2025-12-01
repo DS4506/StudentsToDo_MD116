@@ -1,10 +1,3 @@
-//
-//  TaskModels.swift
-//  StudentsToDo
-//
-//
-//
-
 import Foundation
 import SwiftUI
 
@@ -48,6 +41,11 @@ struct TaskGroup: Identifiable, Hashable, Codable {
     /// How many tasks are completed in this group.
     var completedTaskCount: Int {
         tasks.filter { $0.isCompleted }.count
+    }
+    
+    /// How many tasks are still open in this group.
+    var remainingTaskCount: Int {
+        tasks.count - completedTaskCount
     }
 
     /// A value from 0.0 to 1.0 representing completion progress.
