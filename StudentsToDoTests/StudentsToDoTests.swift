@@ -1,17 +1,20 @@
-//
-//  StudentsToDoTests.swift
-//  StudentsToDoTests
-//
-//  Created by Gabriela Sanchez on 10/11/25.
-//
-
 import Testing
 @testable import StudentsToDo
 
 struct StudentsToDoTests {
 
-    @Test func example() async throws {
-        // Write your test here and use APIs like `#expect(...)` to check expected conditions.
+    // Step 1: Test that a task can have a priority
+    @Test func testTaskHasPriority() throws {
+        var task = TaskItem(title: "Complete Homework")
+        task.priority = .high
+
+        #expect(task.priority == .high)
     }
 
+    // Optional extra test: check the default priority
+    @Test func testDefaultTaskPriorityIsMedium() throws {
+        let task = TaskItem(title: "Read chapter 3")
+
+        #expect(task.priority == .medium)
+    }
 }

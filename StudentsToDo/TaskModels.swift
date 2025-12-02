@@ -1,6 +1,32 @@
 import Foundation
 import SwiftUI
 
+// MARK: - Task Priority
+
+enum TaskPriority: String, Codable, CaseIterable {
+    case high
+    case medium
+    case low
+}
+
+extension TaskPriority {
+    var displayName: String {
+        switch self {
+        case .high: return "High"
+        case .medium: return "Medium"
+        case .low:   return "Low"
+        }
+    }
+
+    var color: Color {
+        switch self {
+        case .high:   return .red
+        case .medium: return .orange
+        case .low:    return .green
+        }
+    }
+}
+
 // MARK: - Single Task
 
 struct TaskItem: Identifiable, Hashable, Codable {
@@ -8,15 +34,18 @@ struct TaskItem: Identifiable, Hashable, Codable {
     var title: String
     var isCompleted: Bool
     var creationDate: Date
+    var priority: TaskPriority
 
     init(id: UUID = UUID(),
          title: String,
          isCompleted: Bool = false,
-         creationDate: Date = Date()) {
+         creationDate: Date = Date(),
+         priority: TaskPriority = .medium) {
         self.id = id
         self.title = title
         self.isCompleted = isCompleted
         self.creationDate = creationDate
+        self.priority = priority
     }
 }
 
@@ -42,7 +71,7 @@ struct TaskGroup: Identifiable, Hashable, Codable {
     var completedTaskCount: Int {
         tasks.filter { $0.isCompleted }.count
     }
-    
+
     /// How many tasks are still open in this group.
     var remainingTaskCount: Int {
         tasks.count - completedTaskCount
@@ -52,15 +81,6 @@ struct TaskGroup: Identifiable, Hashable, Codable {
     var completionRate: Double {
         guard !tasks.isEmpty else { return 0 }
         return Double(completedTaskCount) / Double(tasks.count)
-    }
-
-    /// A user-friendly text summary of completion.
-    var completionSummaryText: String {
-        if tasks.isEmpty {
-            return "No tasks yet"
-        } else {
-            return "\(completedTaskCount) of \(tasks.count) completed"
-        }
     }
 }
 
